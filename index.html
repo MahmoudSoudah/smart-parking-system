@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Smart Parking System</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="login-page" class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand"><div class="brand-icon"><i class="fa-solid fa-square-parking"></i></div><span>SmartPark</span></div>
+    <h1>Find your spot,<br/>park with ease.</h1>
+    <p>A complete parking management system — book slots, pay online, and manage your vehicles.</p>
+    <div class="auth-feats">
+      <div class="af"><i class="fa fa-check-circle"></i>Real-time slot availability</div>
+      <div class="af"><i class="fa fa-check-circle"></i>Online reservations &amp; payments</div>
+      <div class="af"><i class="fa fa-check-circle"></i>10% discount for 3+ car owners</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2>Welcome back</h2>
+      <p class="card-sub">Sign in to your account</p>
+      <div id="login-msg" class="msg-box hidden"></div>
+      <div class="field">
+        <label>Email</label>
+        <div class="field-wrap"><i class="fa fa-envelope"></i>
+          <input type="email" id="l-email" placeholder="you@example.com"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="field-wrap"><i class="fa fa-lock"></i>
+          <input type="password" id="l-pass" placeholder="Your password"/>
+        </div>
+      </div>
+      <button type="button" class="btn-main" onclick="doLogin()">
+        <i class="fa fa-right-to-bracket"></i>Sign In
+      </button>
+      <p class="switch-text">No account? <a onclick="switchPage('register-page')">Register here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ REGISTER ═══════════ -->
+<div id="register-page" class="auth-page hidden">
+  <div class="auth-left">
+    <div class="auth-brand"><div class="brand-icon"><i class="fa-solid fa-square-parking"></i></div><span>SmartPark</span></div>
+    <h1>Join Smart<br/>Parking today.</h1>
+    <p>Create your account and start booking parking slots in minutes.</p>
+    <div class="auth-feats">
+      <div class="af"><i class="fa fa-check-circle"></i>Book slots and manage vehicles</div>
+      <div class="af"><i class="fa fa-check-circle"></i>Manage multiple vehicles</div>
+      <div class="af"><i class="fa fa-check-circle"></i>Role-based access control</div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2>Create account</h2>
+      <p class="card-sub">Fill in your details below</p>
+      <div id="reg-msg" class="msg-box hidden"></div>
+      <div class="field-row">
+        <div class="field">
+          <label>Full Name</label>
+          <div class="field-wrap"><i class="fa fa-user"></i>
+            <input type="text" id="r-name" placeholder="John Smith"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <div class="field-wrap"><i class="fa fa-phone"></i>
+            <input type="text" id="r-phone" placeholder="+961-70-000000"/>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <div class="field-wrap"><i class="fa fa-envelope"></i>
+          <input type="email" id="r-email" placeholder="you@example.com"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="field-wrap"><i class="fa fa-lock"></i>
+          <input type="password" id="r-pass" placeholder="Choose a password"/>
+        </div>
+      </div>
+      <!-- role is always 'user' — set in JS, not shown to user -->
+      <button type="button" class="btn-main" onclick="doRegister()">
+        <i class="fa fa-user-plus"></i>Create Account
+      </button>
+      <p class="switch-text">Have an account? <a onclick="switchPage('login-page')">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     USER APP
+═══════════════════════════════════════════ -->
+<div id="user-app" class="hidden">
+  <nav class="sidebar" id="user-sidebar">
+    <div class="sb-top">
+      <div class="sb-brand">
+        <div class="sb-icon"><i class="fa-solid fa-square-parking"></i></div>
+        <div><div class="sb-name">SmartPark</div><div class="sb-tagline">User Portal</div></div>
+      </div>
+      <div class="sb-profile">
+        <div class="sb-avatar" id="u-avatar">U</div>
+        <div>
+          <div class="sb-username" id="u-username">User</div>
+          <div class="sb-role-tag user-tag">USER</div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <button class="sb-link active" id="u-nav-dashboard"  onclick="uGoto('dashboard')"><i class="fa fa-gauge-high"></i><span>Dashboard</span></button>
+        <button class="sb-link"        id="u-nav-vehicles"   onclick="uGoto('vehicles')"><i class="fa fa-car"></i><span>My Vehicles</span></button>
+        <button class="sb-link"        id="u-nav-lots"       onclick="uGoto('lots')"><i class="fa fa-map-location-dot"></i><span>Parking Lots</span></button>
+        <button class="sb-link"        id="u-nav-book"       onclick="uGoto('book')"><i class="fa fa-calendar-plus"></i><span>Book a Slot</span></button>
+        <button class="sb-link"        id="u-nav-payments"   onclick="uGoto('payments')"><i class="fa fa-credit-card"></i><span>Payments</span></button>
+        <button class="sb-link"        id="u-nav-violations" onclick="uGoto('violations')"><i class="fa fa-triangle-exclamation"></i><span>Violations</span></button>
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <button class="sb-logout" onclick="doLogout()"><i class="fa fa-right-from-bracket"></i><span>Logout</span></button>
+    </div>
+  </nav>
+  <div class="mob-overlay hidden" id="u-overlay" onclick="closeSB('user')"></div>
+  <div class="main-area">
+    <header class="topbar user-topbar">
+      <button class="hamburger" onclick="openSB('user')"><i class="fa fa-bars"></i></button>
+      <div class="tb-title" id="u-tb-title">Dashboard</div>
+      <div class="tb-right">
+        <span class="tb-role-chip user-chip">USER</span>
+        <div class="tb-avatar" id="u-tb-avatar">U</div>
+      </div>
+    </header>
+    <div class="pages">
+
+      <!-- USER DASHBOARD -->
+      <section class="pg active" id="u-pg-dashboard">
+        <div class="pg-head"><h2 id="u-welcome">Welcome!</h2><p class="pg-sub">Your parking overview</p></div>
+        <div class="kpi-row">
+          <div class="kpi kpi-blue"><div><div class="kpi-val" id="u-kpi-veh">–</div><div class="kpi-label">My Vehicles</div></div><i class="fa fa-car kpi-ico"></i></div>
+          <div class="kpi kpi-green"><div><div class="kpi-val" id="u-kpi-lots">–</div><div class="kpi-label">Parking Lots</div></div><i class="fa fa-map-location-dot kpi-ico"></i></div>
+          <div class="kpi kpi-orange"><div><div class="kpi-val" id="u-kpi-slots">–</div><div class="kpi-label">Available Slots</div></div><i class="fa fa-parking kpi-ico"></i></div>
+          <div class="kpi kpi-gold"><div><div class="kpi-val" id="u-kpi-disc">–</div><div class="kpi-label">Discount</div></div><i class="fa fa-tag kpi-ico"></i></div>
+        </div>
+        <div id="discount-banner" class="disc-banner hidden">
+          <div class="disc-banner-left"><i class="fa fa-tag"></i><div><strong>🎉 10% Multi-Car Discount Active!</strong><p>You have 3+ vehicles — 10% off every payment.</p></div></div>
+          <div class="disc-badge">10% OFF</div>
+        </div>
+        <div class="dash-grid">
+          <div class="dcard"><div class="dcard-head"><i class="fa fa-bolt"></i>Quick Actions</div>
+            <div class="quick-grid">
+              <button class="qbtn" onclick="uGoto('book')"><i class="fa fa-calendar-plus"></i>Book Slot</button>
+              <button class="qbtn" onclick="uGoto('vehicles')"><i class="fa fa-car-side"></i>Add Vehicle</button>
+              <button class="qbtn" onclick="uGoto('lots')"><i class="fa fa-map"></i>View Lots</button>
+              <button class="qbtn" onclick="uGoto('payments')"><i class="fa fa-receipt"></i>Pay Now</button>
+            </div>
+          </div>
+          <div class="dcard"><div class="dcard-head"><i class="fa fa-list"></i>Parking Lots</div><div id="u-dash-lots"></div></div>
+        </div>
+      </section>
+
+      <!-- USER VEHICLES -->
+      <section class="pg" id="u-pg-vehicles">
+        <div class="pg-head"><h2>My Vehicles</h2><p class="pg-sub">Register 3 or more vehicles to unlock 10% discount on all payments</p></div>
+        <div class="disc-progress-card">
+          <div class="dpc-left">
+            <div class="dpc-title"><i class="fa fa-tag"></i>Multi-Car Discount Progress</div>
+            <div class="dpc-bar-bg"><div class="dpc-bar" id="dpc-bar" style="width:0%"></div></div>
+            <div class="dpc-text" id="dpc-text">Loading...</div>
+          </div>
+          <div class="dpc-badge locked" id="dpc-badge"><i class="fa fa-lock"></i><span>10% OFF</span></div>
+        </div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-plus-circle"></i>Register New Vehicle</div>
+            <div class="card-body">
+              <div id="veh-msg" class="msg-box hidden"></div>
+              <div class="field"><label>Plate Number</label>
+                <div class="field-wrap"><i class="fa fa-hashtag"></i><input type="text" id="v-plate" placeholder="LEB-0001"/></div>
+              </div>
+              <div class="field"><label>Vehicle Type</label>
+                <div class="field-wrap"><i class="fa fa-car"></i>
+                  <select id="v-type"><option value="car">Car</option><option value="motorcycle">Motorcycle</option><option value="truck">Truck</option></select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Brand</label><div class="field-wrap"><i class="fa fa-tag"></i><input type="text" id="v-brand" placeholder="Toyota"/></div></div>
+                <div class="field"><label>Color</label><div class="field-wrap"><i class="fa fa-palette"></i><input type="text" id="v-color" placeholder="White"/></div></div>
+              </div>
+              <button type="button" class="btn-main" onclick="addVehicle()"><i class="fa fa-plus"></i>Add Vehicle</button>
+            </div>
+          </div>
+          <div class="card"><div class="card-head"><i class="fa fa-list"></i>Your Vehicles</div><div id="veh-list"></div></div>
+        </div>
+      </section>
+
+      <!-- USER LOTS -->
+      <section class="pg" id="u-pg-lots">
+        <div class="pg-head"><h2>Parking Lots</h2><p class="pg-sub">Click any lot to view its available slots</p></div>
+        <div id="lots-grid" class="lots-grid"></div>
+        <div class="drawer-bg hidden" id="drawer-bg" onclick="closeDrawer()"></div>
+        <div class="drawer hidden" id="slot-drawer">
+          <div class="drawer-head">
+            <div><h3 id="drawer-title">Slots</h3><p id="drawer-sub" class="pg-sub"></p></div>
+            <button type="button" onclick="closeDrawer()"><i class="fa fa-times"></i></button>
+          </div>
+          <div class="slot-legend" id="slot-summary"></div>
+          <div id="slot-grid" class="slot-grid"></div>
+        </div>
+      </section>
+
+      <!-- USER BOOK -->
+      <section class="pg" id="u-pg-book">
+        <div class="pg-head"><h2>Book a Slot</h2><p class="pg-sub">Reserve your parking spot in seconds</p></div>
+        <div id="book-disc-notice" class="disc-notice hidden">
+          <i class="fa fa-tag"></i><strong>10% Discount Active!</strong> Your total will be reduced automatically at payment.
+        </div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-calendar-plus"></i>New Booking</div>
+            <div class="card-body">
+              <div id="book-msg" class="msg-box hidden"></div>
+              <div class="field"><label>Parking Lot</label>
+                <div class="field-wrap"><i class="fa fa-map-marker-alt"></i>
+                  <select id="b-lot" onchange="loadBookSlots()"><option value="">— Select a lot —</option></select>
+                </div>
+              </div>
+              <div class="field"><label>Available Slot</label>
+                <div class="field-wrap"><i class="fa fa-parking"></i>
+                  <select id="b-slot"><option value="">— Select lot first —</option></select>
+                </div>
+              </div>
+              <div class="field"><label>Your Vehicle</label>
+                <div class="field-wrap"><i class="fa fa-car"></i>
+                  <select id="b-vehicle"><option value="">Loading vehicles...</option></select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Start Time</label><div class="field-wrap"><i class="fa fa-clock"></i><input type="datetime-local" id="b-start" onchange="calcPreview()"/></div></div>
+                <div class="field"><label>End Time</label><div class="field-wrap"><i class="fa fa-clock"></i><input type="datetime-local" id="b-end" onchange="calcPreview()"/></div></div>
+              </div>
+              <div id="price-preview" class="price-preview hidden">
+                <div class="pp-row"><span>Duration</span><span id="pp-hrs">–</span></div>
+                <div class="pp-row"><span>Rate</span><span id="pp-rate">–</span></div>
+                <div id="pp-disc-row" class="pp-row hidden"><span>10% Discount</span><span id="pp-disc" style="color:#F59E0B;font-weight:700">–</span></div>
+                <div class="pp-divider"></div>
+                <div class="pp-row pp-total"><span>Estimated Total</span><span id="pp-total">–</span></div>
+              </div>
+              <button type="button" class="btn-main" onclick="doBook()"><i class="fa fa-check-circle"></i>Confirm Booking</button>
+            </div>
+          </div>
+          <div class="card" id="booking-done-card" style="display:none">
+            <div class="card-head"><i class="fa fa-circle-check"></i>Booking Confirmed!</div>
+            <div class="card-body">
+              <div class="result-box green-box">
+                <i class="fa fa-circle-check result-ico"></i>
+                <div class="result-label">Your Reservation ID</div>
+                <div class="result-id" id="res-id-out">–</div>
+                <div id="disc-applied-note" class="hidden disc-note"><i class="fa fa-tag"></i>10% discount will apply at payment!</div>
+                <p class="result-hint">Save this ID to pay and check violations.</p>
+              </div>
+              <button type="button" class="btn-main" onclick="uGoto('payments')"><i class="fa fa-credit-card"></i>Pay Now</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- USER PAYMENTS -->
+      <section class="pg" id="u-pg-payments">
+        <div class="pg-head"><h2>Payments</h2><p class="pg-sub">Pay for your reservation — 10% discount applied automatically if you have 3+ vehicles</p></div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-credit-card"></i>Process Payment</div>
+            <div class="card-body">
+              <div id="pay-msg" class="msg-box hidden"></div>
+              <div id="pay-disc-notice" class="disc-notice hidden">
+                <i class="fa fa-tag"></i><strong>10% Multi-Car Discount will be applied!</strong>
+              </div>
+              <div class="field"><label>Reservation ID</label>
+                <div class="field-wrap"><i class="fa fa-hashtag"></i><input type="number" id="p-resid" placeholder="Enter your reservation ID"/></div>
+              </div>
+              <div class="field"><label>Payment Method</label>
+                <div class="field-wrap"><i class="fa fa-wallet"></i>
+                  <select id="p-method">
+                    <option value="cash">Cash</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="online">Online Transfer</option>
+                  </select>
+                </div>
+              </div>
+              <button type="button" class="btn-main" onclick="doPayment()"><i class="fa fa-lock"></i>Pay Now</button>
+            </div>
+          </div>
+          <div class="card" id="receipt-card" style="display:none">
+            <div class="card-head"><i class="fa fa-receipt"></i>Receipt</div>
+            <div class="card-body">
+              <div class="receipt">
+                <div class="receipt-brand"><i class="fa-solid fa-square-parking"></i>SmartPark</div>
+                <div class="rec-row"><span>Status</span><span class="badge-ok">✓ PAID</span></div>
+                <hr class="rec-hr"/>
+                <div class="rec-row"><span>Payment ID</span><span id="rec-pid">–</span></div>
+                <div class="rec-row"><span>Duration</span><span id="rec-hrs">–</span></div>
+                <div class="rec-row"><span>Original Amount</span><span id="rec-orig">–</span></div>
+                <div class="rec-row hidden" id="rec-disc-row"><span>10% Discount</span><span id="rec-disc" style="color:#F59E0B;font-weight:700">–</span></div>
+                <hr class="rec-hr dashed"/>
+                <div class="rec-row rec-total"><span>Total Paid</span><span id="rec-amt">–</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- USER VIOLATIONS -->
+      <section class="pg" id="u-pg-violations">
+        <div class="pg-head"><h2>Violations</h2><p class="pg-sub">Check for overstay fines</p></div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-triangle-exclamation"></i>Check Violation</div>
+            <div class="card-body">
+              <div id="vio-msg" class="msg-box hidden"></div>
+              <div class="field"><label>Reservation ID</label>
+                <div class="field-wrap"><i class="fa fa-hashtag"></i><input type="number" id="vi-resid" placeholder="Enter reservation ID"/></div>
+              </div>
+              <div class="field"><label>Actual Exit Time</label>
+                <div class="field-wrap"><i class="fa fa-clock"></i><input type="datetime-local" id="vi-exit"/></div>
+              </div>
+              <button type="button" class="btn-red" onclick="doViolation()"><i class="fa fa-magnifying-glass"></i>Check Now</button>
+            </div>
+          </div>
+          <div class="card" id="vio-result-card" style="display:none">
+            <div class="card-head"><i class="fa fa-file-invoice"></i>Result</div>
+            <div id="vio-result-body"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN APP
+═══════════════════════════════════════════ -->
+<div id="admin-app" class="hidden">
+  <nav class="sidebar admin-sidebar" id="admin-sidebar">
+    <div class="sb-top">
+      <div class="sb-brand">
+        <div class="sb-icon admin-icon"><i class="fa-solid fa-square-parking"></i></div>
+        <div><div class="sb-name">SmartPark</div><div class="sb-tagline">Admin Panel</div></div>
+      </div>
+      <div class="sb-profile">
+        <div class="sb-avatar admin-av" id="a-avatar">A</div>
+        <div>
+          <div class="sb-username" id="a-username">Admin</div>
+          <div class="sb-role-tag admin-tag">ADMIN</div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <button class="sb-link active" id="a-nav-dashboard" onclick="aGoto('dashboard')"><i class="fa fa-gauge-high"></i><span>Dashboard</span></button>
+        <div class="sb-section-lbl">MANAGEMENT</div>
+        <button class="sb-link" id="a-nav-lots"      onclick="aGoto('lots')"><i class="fa fa-building"></i><span>Manage Lots</span></button>
+        <button class="sb-link" id="a-nav-slots"     onclick="aGoto('slots')"><i class="fa fa-table-cells"></i><span>Manage Slots</span></button>
+        <button class="sb-link" id="a-nav-users"     onclick="aGoto('users')"><i class="fa fa-users"></i><span>All Users</span></button>
+        <div class="sb-section-lbl">ANALYTICS</div>
+        <button class="sb-link" id="a-nav-reports"   onclick="aGoto('reports')"><i class="fa fa-chart-bar"></i><span>Reports</span></button>
+        <button class="sb-link" id="a-nav-discounts" onclick="aGoto('discounts')"><i class="fa fa-tag"></i><span>Discounts</span></button>
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <button class="sb-logout" onclick="doLogout()"><i class="fa fa-right-from-bracket"></i><span>Logout</span></button>
+    </div>
+  </nav>
+  <div class="mob-overlay hidden" id="a-overlay" onclick="closeSB('admin')"></div>
+  <div class="main-area">
+    <header class="topbar admin-topbar">
+      <button class="hamburger" onclick="openSB('admin')"><i class="fa fa-bars"></i></button>
+      <div class="tb-title" id="a-tb-title">Admin Dashboard</div>
+      <div class="tb-right">
+        <span class="tb-role-chip admin-chip">ADMIN</span>
+        <div class="tb-avatar admin-av" id="a-tb-avatar">A</div>
+      </div>
+    </header>
+    <div class="pages">
+
+      <!-- ADMIN DASHBOARD -->
+      <section class="pg active" id="a-pg-dashboard">
+        <div class="pg-head"><h2 id="a-welcome">Admin Panel</h2><p class="pg-sub">System overview</p></div>
+        <div class="kpi-row">
+          <div class="kpi kpi-purple"><div><div class="kpi-val" id="a-kpi-lots">–</div><div class="kpi-label">Parking Lots</div></div><i class="fa fa-building kpi-ico"></i></div>
+          <div class="kpi kpi-teal"><div><div class="kpi-val" id="a-kpi-slots">–</div><div class="kpi-label">Total Slots</div></div><i class="fa fa-table-cells kpi-ico"></i></div>
+          <div class="kpi kpi-blue"><div><div class="kpi-val" id="a-kpi-users">–</div><div class="kpi-label">Users</div></div><i class="fa fa-users kpi-ico"></i></div>
+          <div class="kpi kpi-green"><div><div class="kpi-val" id="a-kpi-avail">–</div><div class="kpi-label">Available Slots</div></div><i class="fa fa-parking kpi-ico"></i></div>
+        </div>
+        <div class="dash-grid">
+          <div class="dcard"><div class="dcard-head"><i class="fa fa-bolt"></i>Quick Actions</div>
+            <div class="quick-grid">
+              <button class="qbtn admin-qbtn" onclick="aGoto('lots')"><i class="fa fa-building"></i>Add Lot</button>
+              <button class="qbtn admin-qbtn" onclick="aGoto('slots')"><i class="fa fa-table-cells"></i>Manage Slots</button>
+              <button class="qbtn admin-qbtn" onclick="aGoto('users')"><i class="fa fa-users"></i>View Users</button>
+              <button class="qbtn admin-qbtn" onclick="aGoto('reports')"><i class="fa fa-chart-bar"></i>Reports</button>
+            </div>
+          </div>
+          <div class="dcard"><div class="dcard-head"><i class="fa fa-chart-pie"></i>Occupancy Overview</div><div id="a-occupancy"></div></div>
+        </div>
+      </section>
+
+      <!-- ADMIN LOTS -->
+      <section class="pg" id="a-pg-lots">
+        <div class="pg-head"><h2>Manage Parking Lots</h2><p class="pg-sub">Add new lots — uses POST /admin/lots</p></div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-plus-circle"></i>Add New Lot</div>
+            <div class="card-body">
+              <div id="lot-msg" class="msg-box hidden"></div>
+              <div class="field"><label>Lot Name</label><div class="field-wrap"><i class="fa fa-building"></i><input type="text" id="al-name" placeholder="Downtown Lot A"/></div></div>
+              <div class="field"><label>Address</label><div class="field-wrap"><i class="fa fa-location-dot"></i><input type="text" id="al-addr" placeholder="12 Hamra Street"/></div></div>
+              <div class="field-row">
+                <div class="field"><label>City</label><div class="field-wrap"><i class="fa fa-city"></i><input type="text" id="al-city" placeholder="Beirut"/></div></div>
+                <div class="field"><label>Total Slots</label><div class="field-wrap"><i class="fa fa-hashtag"></i><input type="number" id="al-slots" placeholder="50"/></div></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Rate/hr ($)</label><div class="field-wrap"><i class="fa fa-dollar-sign"></i><input type="number" step="0.01" id="al-rate" placeholder="2.50"/></div></div>
+                <div class="field"><label>Open</label><div class="field-wrap"><i class="fa fa-clock"></i><input type="time" id="al-open" value="07:00"/></div></div>
+              </div>
+              <div class="field"><label>Close</label><div class="field-wrap"><i class="fa fa-clock"></i><input type="time" id="al-close" value="23:00"/></div></div>
+              <button type="button" class="btn-main admin-btn" onclick="adminAddLot()"><i class="fa fa-plus"></i>Add Lot</button>
+            </div>
+          </div>
+          <div class="card"><div class="card-head"><i class="fa fa-list"></i>All Parking Lots</div><div id="admin-lots-list" class="table-wrap"></div></div>
+        </div>
+      </section>
+
+      <!-- ADMIN SLOTS -->
+      <section class="pg" id="a-pg-slots">
+        <div class="pg-head"><h2>Manage Slots</h2><p class="pg-sub">Add slots and update status — uses POST /admin/slots &amp; PUT /admin/slots/:id/status</p></div>
+        <div class="split">
+          <div class="card">
+            <div class="card-head"><i class="fa fa-plus-circle"></i>Add New Slot</div>
+            <div class="card-body">
+              <div id="slot-msg" class="msg-box hidden"></div>
+              <div class="field"><label>Select Lot</label>
+                <div class="field-wrap"><i class="fa fa-building"></i>
+                  <select id="as-lot" onchange="adminLoadSlots()"><option value="">— Select a lot —</option></select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Slot Number</label><div class="field-wrap"><i class="fa fa-hashtag"></i><input type="text" id="as-num" placeholder="A-01"/></div></div>
+                <div class="field"><label>Floor</label><div class="field-wrap"><i class="fa fa-layer-group"></i><input type="number" id="as-floor" value="1"/></div></div>
+              </div>
+              <div class="field"><label>Slot Type</label>
+                <div class="field-wrap"><i class="fa fa-car"></i>
+                  <select id="as-type">
+                    <option value="standard">Standard</option>
+                    <option value="compact">Compact</option>
+                    <option value="handicap">Handicap</option>
+                    <option value="ev_charging">EV Charging</option>
+                  </select>
+                </div>
+              </div>
+              <button type="button" class="btn-main admin-btn" onclick="adminAddSlot()"><i class="fa fa-plus"></i>Add Slot</button>
+            </div>
+          </div>
+          <div class="card"><div class="card-head"><i class="fa fa-table-cells"></i>Slots in Selected Lot</div><div id="admin-slots-list" class="table-wrap"></div></div>
+        </div>
+      </section>
+
+      <!-- ADMIN USERS -->
+      <section class="pg" id="a-pg-users">
+        <div class="pg-head"><h2>All Users</h2><p class="pg-sub">🏷️ badge = 3+ vehicles (10% discount eligible) — uses GET /admin/users</p></div>
+        <div class="card full-card"><div class="card-head"><i class="fa fa-users"></i>Registered Users</div><div id="admin-users-list" class="table-wrap"></div></div>
+      </section>
+
+      <!-- ADMIN REPORTS -->
+      <section class="pg" id="a-pg-reports">
+        <div class="pg-head"><h2>Occupancy Reports</h2><p class="pg-sub">Real-time slot status per lot</p></div>
+        <div id="admin-reports-body"></div>
+      </section>
+
+      <!-- ADMIN DISCOUNTS -->
+      <section class="pg" id="a-pg-discounts">
+        <div class="pg-head"><h2>Discount Management</h2><p class="pg-sub">Auto rule: 3+ vehicles = 10% off all payments</p></div>
+        <div class="disc-rule-card">
+          <div class="drc-icon"><i class="fa fa-tag"></i></div>
+          <div class="drc-info">
+            <h3>Multi-Car Discount Rule</h3>
+            <p>Any user who registers <strong>3 or more vehicles</strong> automatically gets <strong>10% off</strong> every payment. Applied at checkout — no coupon code needed.</p>
+          </div>
+          <div class="drc-badge">10% OFF</div>
+        </div>
+        <div class="card full-card" style="margin-top:20px">
+          <div class="card-head"><i class="fa fa-users"></i>Eligible Users (3+ Vehicles)</div>
+          <div id="disc-eligible-list" class="table-wrap"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
