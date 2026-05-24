@@ -66,7 +66,7 @@ http://localhost:3000
 - 🔧 Admin control panel
 
 ## 📁 Project Structure
-mart-parking-system/
+smart-parking-backend/
 ├── frontend/
 │   ├── index.html
 │   ├── style.css
