@@ -3,10 +3,10 @@
 A full-stack database-driven web application built for the **COMP344 Database Management Systems** course at **Beirut Arab University**.
 
 ## 👥 Team
-| Name | ID |
-|---|---|
-| Mahmoud Soudah | 202403264 |
-| Mohammad Rabah | 202400780 |
+| Name 
+|---
+| Mahmoud Soudah 
+| Mohammad Rabah
 
 ## 📋 About
 The Smart Parking System allows users to browse parking lots, reserve slots, make payments, and track violations — all through a modern web dashboard. Admins manage lots, slots, users, and view occupancy reports.
